@@ -2,14 +2,18 @@
   "name": "git-impact",
   "displayName": "GitImpact",
   "description": "Analyze real coding impact using Information Theory — filters noise and scores code complexity via Shannon Entropy",
-  "version": "0.0.1",
-  "publisher": "phjun",
+  "version": "0.0.2",
+  "publisher": "phjun03",
   "engines": {
     "vscode": "^1.100.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/git-impact"
+    "url": "https://github.com/PHJun03/GitImpact.git"
+  },
+  "author": {
+    "name": "Hyeonjun Park",
+    "url": "https://github.com/PHJun03"
   },
   "categories": [
     "Other",

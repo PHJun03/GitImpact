@@ -28,7 +28,17 @@ async function getRemoteBranch(repoPath: string): Promise<string> {
     if (originHead.trim()) return originHead.trim();
   } catch (e) {}
 
-  // 3. Fallback
+  // 3. Fallback: Check if origin/main or origin/master exists locally
+  try {
+    const { stdout: branches } = await execFileAsync("git", ["branch", "-r"], { cwd: repoPath });
+    if (branches.includes("origin/main")) return "origin/main";
+    if (branches.includes("origin/master")) return "origin/master";
+    
+    // 4. Absolute fallback: just grab the first origin branch found
+    const match = branches.match(/origin\/[\w.-]+/);
+    if (match) return match[0];
+  } catch(e) {}
+
   return "origin/main";
 }
 
@@ -41,12 +51,12 @@ async function getRemoteBranch(repoPath: string): Promise<string> {
  * Filters out common binaries, minified files, and lockfiles.
  */
 export async function getTrackedFiles(repoPath: string, remoteBranch: string): Promise<string[]> {
-  const { stdout } = await execFileAsync("git", ["ls-tree", "-r", "--name-only", remoteBranch], {
+  const { stdout } = await execFileAsync("git", ["ls-tree", "-r", "-z", "--name-only", remoteBranch], {
     cwd: repoPath,
     maxBuffer: MAX_BUFFER,
   });
 
-  const files = stdout.split("\n").map((f) => f.trim()).filter((f) => f.length > 0);
+  const files = stdout.split("\0").filter((f) => f.length > 0);
 
   const ignoredExtensions = new Set([
     ".png", ".jpg", ".jpeg", ".gif", ".ico", ".svg", ".webp",

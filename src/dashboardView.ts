@@ -25,8 +25,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
-    // Initial state: Show the "Analyze" button
-    webviewView.webview.html = this._getLoadingHtml(false);
+    // Initial state: Show loading state immediately
+    webviewView.webview.html = this._getLoadingHtml(true);
+    
+    // Automatically trigger analysis without waiting for button click
+    setTimeout(() => {
+      this.triggerAnalysis();
+    }, 100);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -127,8 +132,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     }));
 
     const sorted = [...normalizedData].sort((a, b) => b.impactScore - a.impactScore);
-    const labels = sorted.map((d) => d.author);
-    const scores = sorted.map((d) => d.impactScore);
+
 
     const tableRows = sorted
       .map(
@@ -209,14 +213,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       const rawData = ${JSON.stringify(sorted)};
       const baseHues = rawData.map((_, i) => (i * 360) / rawData.length + 210);
 
-      // Bar Chart
-      new Chart(document.getElementById('impactChart').getContext('2d'), {
+      // Responsive Bar Chart
+      const chartWrap = document.getElementById('impactChart').parentElement;
+      function getTopK() {
+        // Calculate how many bars fit based on 25px per bar
+        return Math.max(5, Math.floor(chartWrap.clientWidth / 25));
+      }
+      
+      const allLabels = rawData.map(d => d.author.length > 12 ? d.author.substring(0, 10) + '...' : d.author);
+      const allScores = rawData.map(d => d.impactScore);
+      
+      const impactChart = new Chart(document.getElementById('impactChart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: ${JSON.stringify(labels)},
+          labels: allLabels.slice(0, getTopK()),
           datasets: [{
             label: 'Impact Score',
-            data: ${JSON.stringify(scores)},
+            data: allScores.slice(0, getTopK()),
             backgroundColor: baseHues.map(h => \`hsla(\${h}, 70%, 58%, 0.7)\`),
             borderColor: baseHues.map(h => \`hsla(\${h}, 80%, 45%, 1)\`),
             borderWidth: 1,
@@ -230,10 +243,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             tooltip: { callbacks: { label: c => c.parsed.y.toFixed(0) + '%' } }
           },
           scales: {
-            x: { ticks: { color: fgColor }, grid: { display: false } },
+            x: { ticks: { color: fgColor, maxTicksLimit: 5, autoSkip: true, maxRotation: 45 }, grid: { display: false } },
             y: { beginAtZero: true, ticks: { color: fgColor, callback: v => v + '%' }, grid: { color: gridColor } }
           }
         }
+      });
+
+      window.addEventListener('resize', () => {
+        const k = getTopK();
+        impactChart.data.labels = allLabels.slice(0, k);
+        impactChart.data.datasets[0].data = allScores.slice(0, k);
+        impactChart.update();
       });
 
       // Line Chart
@@ -286,7 +306,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               responsive: true, maintainAspectRatio: false,
               plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toFixed(0) + '%' } } },
               interaction: { mode: 'nearest', axis: 'x', intersect: false },
-              scales: { x: { ticks: { color: fgColor }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: fgColor, callback: v => v + '%' }, grid: { color: gridColor } } }
+              scales: { x: { ticks: { color: fgColor, maxTicksLimit: 6, autoSkip: true, maxRotation: 45 }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: fgColor, callback: v => v + '%' }, grid: { color: gridColor } } }
             }
           });
         }

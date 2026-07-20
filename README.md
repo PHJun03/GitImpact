@@ -1,6 +1,17 @@
 # GitImpact
 
+![Version](https://img.shields.io/badge/version-0.0.2-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![VS Code](https://img.shields.io/badge/VS_Code-1.100.0+-blueviolet.svg)
+
+![GitImpact Demo](./resources/demo.png)
+
 GitImpact is a Visual Studio Code extension that measures the *true* impact of code contributions. Instead of merely counting raw lines of code, it applies **Information Theory (Shannon Entropy)** to filter out noise, boilerplate, and empty lines, delivering a highly accurate metric of meaningful code complexity.
+
+## Requirements
+
+- **Git**: Must be installed on your local machine.
+- **Remote Sync**: The repository must be linked to a remote (e.g., GitHub) and synced. The extension analyzes code based on the remote branch to ensure authenticity.
 
 ## Features
 
@@ -17,6 +28,13 @@ GitImpact is a Visual Studio Code extension that measures the *true* impact of c
 3. Click the **...** (Views and More Actions) menu at the top right.
 4. Select **Install from VSIX...**
 5. Locate the downloaded file and install.
+
+## How to Use
+
+1. Open a valid Git repository in VS Code (make sure your latest commits are pushed to the remote).
+2. Click on the 📈 **GitImpact** icon in the Activity Bar on the left side of the screen.
+3. Click the **[Analyze Repository]** button.
+4. The extension will generate a beautiful line chart and leaderboard showing the *true* impact of each contributor!
 
 ## Development & Building
 
