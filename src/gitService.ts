@@ -85,20 +85,26 @@ export async function getAuthorDiffs(
   // Grouped by: Author -> CommitHash -> string[]
   const authorCommits = new Map<string, Map<string, { date: string; lines: string[] }>>();
 
-  // Process files sequentially to avoid spawning too many processes on Windows
-  for (const file of files) {
-    try {
-      const { stdout } = await execFileAsync(
-        "git",
-        ["blame", "--line-porcelain", remoteBranch, "--", file],
-        { cwd: repoPath, maxBuffer: MAX_BUFFER },
-      );
-      
-      parseBlamePorcelain(stdout, authorCommits);
-    } catch (err) {
-      // Ignore files that fail blame (e.g. submodules or weird encodings)
-      console.warn(`Failed to blame ${file}:`, err);
-    }
+  // Process files in batches to speed up execution significantly (Concurrency: 30)
+  const CONCURRENCY = 30;
+  for (let i = 0; i < files.length; i += CONCURRENCY) {
+    const chunk = files.slice(i, i + CONCURRENCY);
+    await Promise.all(
+      chunk.map(async (file) => {
+        try {
+          const { stdout } = await execFileAsync(
+            "git",
+            ["blame", "--line-porcelain", remoteBranch, "--", file],
+            { cwd: repoPath, maxBuffer: MAX_BUFFER },
+          );
+          
+          parseBlamePorcelain(stdout, authorCommits);
+        } catch (err) {
+          // Ignore files that fail blame (e.g. submodules or weird encodings)
+          console.warn(`Failed to blame ${file}:`, err);
+        }
+      })
+    );
   }
 
   const results: AuthorDiff[] = [];
