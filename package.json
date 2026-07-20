@@ -1,0 +1,62 @@
+{
+  "name": "git-impact",
+  "displayName": "GitImpact",
+  "description": "Analyze real coding impact using Information Theory — filters noise and scores code complexity via Shannon Entropy",
+  "version": "0.0.1",
+  "publisher": "phjun",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/git-impact"
+  },
+  "categories": [
+    "Other",
+    "SCM Providers"
+  ],
+  "activationEvents": [
+    "onCommand:gitImpact.analyze",
+    "onView:gitImpact.dashboardView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "gitImpact.analyze",
+        "title": "GitImpact: Analyze Repository"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gitImpact",
+          "title": "GitImpact",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "gitImpact": [
+        {
+          "type": "webview",
+          "id": "gitImpact.dashboardView",
+          "name": "Dashboard"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/node": "22.x",
+    "typescript": "^5.7.2",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
