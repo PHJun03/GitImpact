@@ -72,7 +72,7 @@ export function calculateImpactScore(
     if (filteredLineCount === 0) continue;
 
     const tokens = tokenize(filteredLines);
-    allTokens.push(...tokens);
+    for (const t of tokens) allTokens.push(t);
     
     const entropy = shannonEntropy(tokens);
     const complexityBonus = computeComplexityBonus(tokens);
@@ -176,7 +176,7 @@ function tokenize(lines: readonly string[]): string[] {
   for (const line of lines) {
     const matches = line.match(TOKEN_REGEX);
     if (matches) {
-      tokens.push(...matches);
+      for (const m of matches) tokens.push(m);
     }
   }
   return tokens;
