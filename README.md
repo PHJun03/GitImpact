@@ -1,6 +1,6 @@
 # GitImpact
 
-![Version](https://img.shields.io/badge/version-0.0.2-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.3-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![VS Code](https://img.shields.io/badge/VS_Code-1.100.0+-blueviolet.svg)
 
@@ -21,7 +21,24 @@ GitImpact is a Visual Studio Code extension that measures the *true* impact of c
 - **Time-Series Activity Bar Dashboard**: View team rankings and historical impact trends directly inside your VS Code Sidebar.
 - **Auto-Refresh**: Automatically detects when you sync with your remote (e.g., `git pull`, `git push`, `git fetch`) and updates the dashboard.
 
-## Installation (Local VSIX)
+## Installation
+
+### Via Extension Marketplace (Recommended)
+You can install GitImpact directly from the official VS Code Marketplace or Open VSX Registry (for VSCodium, Cursor, etc.).
+
+![Installation via Marketplace](./resources/installation1.jpg)
+
+1. Open your editor and navigate to the **Extensions** view (`Ctrl+Shift+X`).
+2. Search for **GitImpact**.
+3. Click **Install**.
+
+*Direct Links:*
+- [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=PHJun03.git-impact)
+- [Open VSX Registry](https://open-vsx.org/extension/phjun03/git-impact)
+
+### Manual Installation (VSIX)
+
+![Manual VSIX Installation](./resources/installation2.jpg)
 
 1. Download the latest `git-impact-*.vsix` file from the [Releases](../../releases) page.
 2. Open VS Code and navigate to the **Extensions** view (`Ctrl+Shift+X`).

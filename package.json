@@ -2,7 +2,7 @@
   "name": "git-impact",
   "displayName": "GitImpact",
   "description": "Analyze real coding impact using Information Theory — filters noise and scores code complexity via Shannon Entropy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "phjun03",
   "engines": {
     "vscode": "^1.100.0"
