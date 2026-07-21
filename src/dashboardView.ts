@@ -220,7 +220,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         return Math.max(5, Math.floor(chartWrap.clientWidth / 25));
       }
       
-      const allLabels = rawData.map(d => d.author.length > 12 ? d.author.substring(0, 10) + '...' : d.author);
+      function getActualK() {
+        return Math.min(rawData.length, getTopK());
+      }
+      
+      const allLabels = rawData.map(d => d.author);
       const allScores = rawData.map(d => d.impactScore);
       
       const impactChart = new Chart(document.getElementById('impactChart').getContext('2d'), {
@@ -243,7 +247,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             tooltip: { callbacks: { label: c => c.parsed.y.toFixed(0) + '%' } }
           },
           scales: {
-            x: { ticks: { color: fgColor, maxTicksLimit: 5, autoSkip: true, maxRotation: 45 }, grid: { display: false } },
+            x: { 
+              ticks: { 
+                color: fgColor, 
+                maxTicksLimit: 5, 
+                autoSkip: true, 
+                maxRotation: 45,
+                callback: function(value) {
+                  const label = this.getLabelForValue(value);
+                  if (!label) return '';
+                  const maxChars = Math.max(12, Math.floor(chartWrap.clientWidth / getActualK() / 7));
+                  return label.length > maxChars ? label.substring(0, maxChars - 3) + '...' : label;
+                }
+              }, 
+              grid: { display: false } 
+            },
             y: { beginAtZero: true, ticks: { color: fgColor, callback: v => v + '%' }, grid: { color: gridColor } }
           }
         }
