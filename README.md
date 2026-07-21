@@ -50,8 +50,7 @@ You can install GitImpact directly from the official VS Code Marketplace or Open
 
 1. Open a valid Git repository in VS Code (make sure your latest commits are pushed to the remote).
 2. Click on the 📈 **GitImpact** icon in the Activity Bar on the left side of the screen.
-3. Click the **[Analyze Repository]** button.
-4. The extension will generate a beautiful line chart and leaderboard showing the *true* impact of each contributor!
+3. The extension will generate a beautiful line chart and leaderboard showing the *true* impact of each contributor!
 
 ## Development & Building
 
