@@ -18,26 +18,34 @@ import type { AuthorImpact } from "./types.js";
 export function activate(context: vscode.ExtensionContext) {
   // Callback that the SidebarProvider calls when "Analyze" is clicked
   const analyzeCallback = async (): Promise<AuthorImpact[]> => {
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-      throw new Error("No open workspace folder found.");
-    }
+    return await vscode.window.withProgress(
+      {
+        location: { viewId: "gitImpact" },
+        cancellable: false,
+      },
+      async () => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+          throw new Error("No open workspace folder found.");
+        }
 
-    const repoPath = workspaceFolders[0].uri.fsPath;
-    
-    // Step 1: Extract Git data
-    const authorDiffs = await getAuthorDiffs(repoPath);
+        const repoPath = workspaceFolders[0].uri.fsPath;
+        
+        // Step 1: Extract Git data
+        const authorDiffs = await getAuthorDiffs(repoPath);
 
-    if (authorDiffs.length === 0) {
-      throw new Error("No recent Git history found or no local commits detected.");
-    }
+        if (authorDiffs.length === 0) {
+          throw new Error("No recent Git history found or no local commits detected.");
+        }
 
-    // Step 2 & 3: Filter noise + Score each author
-    const results: AuthorImpact[] = authorDiffs.map((diff) => {
-      return calculateImpactScore(diff.author, diff.commits);
-    });
+        // Step 2 & 3: Filter noise + Score each author
+        const results: AuthorImpact[] = authorDiffs.map((diff) => {
+          return calculateImpactScore(diff.author, diff.commits);
+        });
 
-    return results;
+        return results;
+      }
+    );
   };
 
   const provider = new SidebarProvider(context.extensionUri, analyzeCallback);

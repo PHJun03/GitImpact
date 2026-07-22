@@ -1,6 +1,6 @@
 # GitImpact
 
-![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.5-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![VS Code](https://img.shields.io/badge/VS_Code-1.100.0+-blueviolet.svg)
 
