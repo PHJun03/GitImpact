@@ -6,7 +6,7 @@
 
 ![GitImpact Demo](./resources/demo.png)
 
-GitImpact is a Visual Studio Code extension that measures the *true* impact of code contributions. Instead of merely counting raw lines of code, it applies **Information Theory (Shannon Entropy)** to filter out noise, boilerplate, and empty lines, delivering a highly accurate metric of meaningful code complexity.
+GitImpact is a Visual Studio Code extension that measures the *true* line impact of code contributions. Instead of merely counting raw lines of code, it smartly filters out noise (empty lines, brackets, boilerplate) and applies **Information Theory (Shannon Entropy)** to evaluate the true complexity of the remaining code.
 
 ## Requirements
 
